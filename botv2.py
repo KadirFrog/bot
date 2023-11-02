@@ -1,7 +1,8 @@
 import discord
+from discord import client
 from discord.ext import commands
 
-from bot import client
+
 
 intents = discord.Intents.default()
 intents.members = True
@@ -22,7 +23,7 @@ async def on_ready():
     print(f'We have logged in as {bot.user}')
 
 @bot.command(name='role-as-name', brief="Renames usernames to fit the member roles.")
-async def on_ready():
+async def role_as_name():
     print(f'We have logged in as {client.user}')
 
     # Get the server by ID

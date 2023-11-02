@@ -13,7 +13,7 @@ TOKEN = 'MTE2OTM3MDYxMjkzMDcyODAyOA.GhOxCk.hijCFJzsq1lGjtkCOr2HepTpKL5YMKys3zUMl
 SERVER_ID = '1166787640004186152'
 
 
-bot = commands.Bot(command_prefix='/', intents=intents)
+bot = commands.Bot(command_prefix='$', intents=intents)
 
 
 @bot.event
@@ -44,6 +44,35 @@ async def on_member_update(before, after):
             except Exception as e:
                 print(f'Failed to change nickname for {after.name}: {e}')
 
+@bot.command(name="test", brief="test")
+async def test(cfx):
+    await cfx.send("Hello")
+
+@bot.command(name='join')
+async def join_voice(ctx):
+    # Check if the user is in a voice channel
+    if ctx.author.voice is None:
+        await ctx.send('You are not in a voice channel.')
+        return
+
+    # Join the user's voice channel
+    channel = ctx.author.voice.channel
+    voice_client = await channel.connect()
+
+    # Send a message in the text channel
+    await ctx.send(f'Joined voice channel: {channel.name}')
+
+    # Play an audio message (you can replace this with your own audio file)
+    audio_source = discord.FFmpegPCMAudio('audio_file.mp3')  # Replace 'audio_file.mp3' with your audio file
+    voice_client.play(audio_source)
+
+@bot.command(name='leave')
+async def leave_voice(ctx):
+    # Check if the bot is in a voice channel
+    if ctx.voice_client is not None:
+        # Leave the voice channel
+        await ctx.voice_client.disconnect()
+        await ctx.send('Left voice channel.')
 
 def format_username(member, name: str = ""):
     if not name:
