@@ -1,18 +1,19 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 import token_manager
+import os
+import music_manager
 
 intents = discord.Intents.default()
 intents.members = True
 intents.guilds = True
 intents.message_content = True  # Add this for command handling
 
-
 TOKEN = token_manager.bot_token()
 
-
 SERVER_ID = token_manager.server_token()
-
 
 bot = commands.Bot(command_prefix='$', intents=intents)
 
@@ -32,6 +33,7 @@ async def on_member_join(member):
     except Exception as e:
         print(f'Failed to change nickname for {member.name}: {e}')
 
+
 @bot.event
 async def on_member_update(before, after):
     if before.guild.id == int(SERVER_ID):
@@ -45,9 +47,11 @@ async def on_member_update(before, after):
             except Exception as e:
                 print(f'Failed to change nickname for {after.name}: {e}')
 
+
 @bot.command(name="test", brief="test")
 async def test(cfx):
     await cfx.send("Hello")
+
 
 @bot.command(name='join')
 async def join_voice(ctx):
@@ -63,9 +67,31 @@ async def join_voice(ctx):
     # Send a message in the text channel
     await ctx.send(f'Joined voice channel: {channel.name}')
 
-    # Play an audio message (you can replace this with your own audio file)
-    audio_source = discord.FFmpegPCMAudio('audio_file.mp3')  # Replace 'audio_file.mp3' with your audio file
-    voice_client.play(audio_source)
+
+
+@bot.command(name="play")
+async def play(ctx, playlist_name: str):
+    music_manager.preload(playlist_name)
+
+    mp3s = os.listdir("files/")
+
+    for mp3 in mp3s:
+        voice_client = ctx.voice_client
+        source = discord.FFmpegPCMAudio(mp3)
+        voice_client.play(source)
+        while voice_client.is_playing():
+            await asyncio.sleep(1)
+
+
+@bot.command(name="newp")
+async def new(ctx, playlist_name: str):
+    music_manager.create_playlist(playlist_name)
+
+
+@bot.command(name="addtop")
+async def add(ctx, pn: str, sn: str):
+    music_manager.add_song_to_playlist(pn, music_manager.get_song(sn))
+
 
 @bot.command(name='leave')
 async def leave_voice(ctx):
@@ -74,6 +100,7 @@ async def leave_voice(ctx):
         # Leave the voice channel
         await ctx.voice_client.disconnect()
         await ctx.send('Left voice channel.')
+
 
 def format_username(member, name: str = ""):
     if not name:
