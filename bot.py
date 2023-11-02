@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import token_manager
 
 intents = discord.Intents.default()
 intents.members = True
@@ -7,10 +8,10 @@ intents.guilds = True
 intents.message_content = True  # Add this for command handling
 
 
-TOKEN = 'MTE2OTM3MDYxMjkzMDcyODAyOA.GhOxCk.hijCFJzsq1lGjtkCOr2HepTpKL5YMKys3zUMlQ'
+TOKEN = token_manager.bot_token()
 
 
-SERVER_ID = '1166787640004186152'
+SERVER_ID = token_manager.server_token()
 
 
 bot = commands.Bot(command_prefix='$', intents=intents)
