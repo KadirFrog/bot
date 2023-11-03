@@ -65,3 +65,12 @@ def remove_song(pn, si):
     r.close()
     with open(pn, "w") as f:
         f.write(read)
+
+def add_song_to_pl_via_url(pn, url):
+    pn = os.path.join("playlists/", pn)
+    r = open(pn, "w")
+    read = r.read()
+    r.close()
+    new = read + url + "\n"
+    with open(pn, "w") as f:
+        f.write(new)

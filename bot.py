@@ -5,6 +5,7 @@ from discord.ext import commands
 import token_manager
 import os
 import music_manager
+from youtube_music import get_video_name
 
 intents = discord.Intents.default()
 intents.members = True
@@ -110,6 +111,19 @@ async def leave_voice(ctx):
         await ctx.voice_client.disconnect()
         await ctx.send('Left voice channel.')
 
+@bot.command(name="addtopurl")
+async def add_via_url(ctx, pn: str, su: str):
+    try:
+        name = get_video_name(su)
+        music_manager.add_song_to_pl_via_url(pn, su)
+        await ctx.send(f"Song ('{name}') added to playlist: {pn}")
+    except:
+        await ctx.send("Invalid link.")
+
+@bot.command(name="stop")
+async def stop(ctx):
+    await ctx.voice_client.stop()
+    music_manager.clear_preload()
 
 def format_username(member, name: str = ""):
     if not name:
