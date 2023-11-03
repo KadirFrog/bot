@@ -32,3 +32,8 @@ def download_mp3(link, name):
         os.rename(stream.default_filename, os.path.join("files", f"m{name}.mp3"))
     except Exception as e:
         print(f"Error while downloading MP3: {e}")
+
+def get_video_name(url):
+    video = YouTube(url)
+    return video.title
+

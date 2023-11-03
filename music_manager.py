@@ -1,6 +1,6 @@
 import os
 
-from youtube_music import download_mp3, get_song
+from youtube_music import download_mp3, get_song, get_video_name
 
 def clear_preload(folder_path: str = "files"):
     # Check if the folder path exists
@@ -41,3 +41,13 @@ def preload(pn):
         download_mp3(url, "id=" + str(sc))
     print(f"{pn} has been preloaded")
 
+def list_pl(pn):
+    p = open(os.path.join("playlists/", pn), "r")
+    pc = p.read().splitlines()
+    print("test:\n")
+    print(pc)
+    names = []
+    for url in pc:
+        a = get_video_name(url)
+        names.append(a + ": " + url)
+    return "\n".join(names)

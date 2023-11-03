@@ -63,7 +63,10 @@ async def join_voice(ctx):
     voice_client = await channel.connect()
     await ctx.send(f'Joined voice channel: {channel.name}')
 
-
+@bot.command(name="lp")
+async def show_pl(ctx, play_list_name: str):
+    a = music_manager.list_pl(play_list_name)
+    await ctx.send(a)
 
 @bot.command(name="playpl")
 async def play(ctx, playlist_name: str):
