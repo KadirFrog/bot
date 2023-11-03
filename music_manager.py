@@ -1,6 +1,6 @@
 import os
 
-from youtube_music import download_mp4, convert_mp4_to_mp3, get_song
+from youtube_music import download_mp3, get_song
 
 def clear_preload(folder_path: str = "files"):
     # Check if the folder path exists
@@ -36,6 +36,4 @@ def preload(pn):
     clear_preload()
     for url in p:
         sc += 1
-        download_mp4(url)
-        convert_mp4_to_mp3("ytd.mp4", f"song{sc}")
-
+        download_mp3(url, "id=" + str(sc))
