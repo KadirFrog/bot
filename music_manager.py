@@ -25,6 +25,8 @@ def create_playlist(name):
 def add_song_to_playlist(pn, su):
     pn = os.path.join("playlists/", pn)
     su = get_song(su)
+    if su == "unvalid":
+        return False
     with open(pn, "w") as f:
         f.write(f"{su}\n")
 
@@ -37,3 +39,5 @@ def preload(pn):
     for url in p:
         sc += 1
         download_mp3(url, "id=" + str(sc))
+    print(f"{pn} has been preloaded")
+

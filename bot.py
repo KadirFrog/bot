@@ -55,42 +55,41 @@ async def test(cfx):
 
 @bot.command(name='join')
 async def join_voice(ctx):
-    # Check if the user is in a voice channel
     if ctx.author.voice is None:
         await ctx.send('You are not in a voice channel.')
         return
 
-    # Join the user's voice channel
     channel = ctx.author.voice.channel
     voice_client = await channel.connect()
-
-    # Send a message in the text channel
     await ctx.send(f'Joined voice channel: {channel.name}')
 
 
 
-@bot.command(name="play")
+@bot.command(name="playpl")
 async def play(ctx, playlist_name: str):
     music_manager.preload(playlist_name)
-
     mp3s = os.listdir("files/")
 
     for mp3 in mp3s:
         voice_client = ctx.voice_client
-        source = discord.FFmpegPCMAudio(mp3)
+        m = os.path.join("files", mp3)
+        source = discord.FFmpegPCMAudio(m)
         voice_client.play(source)
         while voice_client.is_playing():
             await asyncio.sleep(1)
 
-
 @bot.command(name="newp")
 async def new(ctx, playlist_name: str):
-    music_manager.create_playlist(playlist_name)
-
+    if " " not in playlist_name:
+        music_manager.create_playlist(playlist_name)
+        await ctx.send(f"Created Playlist: {playlist_name}")
+    else:
+        await ctx.send("Playlists cannot contain spaces!")
 
 @bot.command(name="addtop")
 async def add(ctx, pn: str, sn: str):
     music_manager.add_song_to_playlist(pn, music_manager.get_song(sn))
+    await ctx.send(f"Added {sn} to {pn}.")
 
 
 @bot.command(name='leave')

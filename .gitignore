@@ -3,3 +3,5 @@ audio_file.mp3
 token-manager.py
 playlists/*
 files/*
+*.mp4
+test.py
