@@ -16,12 +16,16 @@ def search_youtube(query, max_results=10):
 
 
 def get_song(name):
-    link = search_youtube(name)[0]
-    video = YouTube(link)
-    if name in video.title:
-        return link
-    else:
-        return search_youtube(name)[1]
+    try:
+        link = search_youtube(name)[0]
+        video = YouTube(link)
+        if name in video.title:
+            return link
+        else:
+            return search_youtube(name)[1]
+    except IndexError:
+        print("Song not found")
+        return ""
 
 
 def download_mp3(link, name):

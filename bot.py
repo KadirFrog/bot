@@ -94,6 +94,13 @@ async def add(ctx, pn: str, sn: str):
     music_manager.add_song_to_playlist(pn, music_manager.get_song(sn))
     await ctx.send(f"Added {sn} to {pn}.")
 
+@bot.command(name="rs")
+async def rs(ctx, pn: str, si: str):
+    si = int(si)
+    music_manager.remove_song(pn, si)
+    await ctx.send("Song removed from playlist.\nNew Playlist:")
+    a = music_manager.list_pl(pn)
+    await ctx.send(a)
 
 @bot.command(name='leave')
 async def leave_voice(ctx):

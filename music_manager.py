@@ -25,10 +25,13 @@ def create_playlist(name):
 def add_song_to_playlist(pn, su):
     pn = os.path.join("playlists/", pn)
     su = get_song(su)
+    r = open(pn, "r")
+    read = r.read()
+    r.close()
     if su == "unvalid":
         return False
     with open(pn, "w") as f:
-        f.write(f"{su}\n")
+        f.write(f"{read}{su}\n")
 
 def preload(pn):
     pn = os.path.join("playlists/", pn)
@@ -51,3 +54,14 @@ def list_pl(pn):
         a = get_video_name(url)
         names.append(a + ": " + url)
     return "\n".join(names)
+
+
+def remove_song(pn, si):
+    pn = os.path.join("playlists/", pn)
+    r = open(pn, "r")
+    read = r.read().splitlines()
+    del read[si + 1]
+    read = "\n".join(read) + "\n"
+    r.close()
+    with open(pn, "w") as f:
+        f.write(read)
