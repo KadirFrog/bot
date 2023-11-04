@@ -33,7 +33,7 @@ def add_song_to_playlist(pn, su):
     with open(pn, "w") as f:
         f.write(f"{read}{su}\n")
 
-async def preload(pn):
+async def preload(pn, si):
     pn = os.path.join("playlists/", pn)
     f = open(pn, "r")
     p = f.read().splitlines()
@@ -41,7 +41,9 @@ async def preload(pn):
     clear_preload()
     for url in p:
         sc += 1
-        download_mp3(url, "id=" + str(sc))
+        if sc < si:
+            continue
+        await download_mp3(url, "id=" + str(sc))
     print(f"{pn} has been preloaded")
     return 1
 

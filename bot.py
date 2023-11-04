@@ -69,26 +69,35 @@ async def show_pl(ctx, play_list_name: str):
     a = music_manager.list_pl(play_list_name)
     await ctx.send(a)
 
+
 @bot.command(name="playpl")
-async def play(ctx, playlist_name: str):
+async def play(ctx, playlist_name: str, start_index: int = 0):
     voice_channel = ctx.author.voice.channel
+
     if voice_channel:
-        voice_client = await voice_channel.connect()
+        if ctx.voice_client:
+            await ctx.voice_client.disconnect()
 
-    await music_manager.preload(playlist_name)
-    mp3s = os.listdir("files/")
-    while not os.listdir("files/"):
-        await asyncio.sleep(1)
-    for mp3 in mp3s:
-        voice_client = ctx.voice_client
-        m = os.path.join("files", mp3)
-        source = discord.FFmpegPCMAudio(m)
-        voice_client.play(source)
-        while voice_client.is_playing():
-            await asyncio.sleep(1)
+        try:
+            voice_client = await voice_channel.connect()
+            await asyncio.sleep(2)  # Wait for a few seconds after connecting
+            await music_manager.preload(playlist_name, start_index)
+            mp3s = os.listdir("files/")
 
+            if mp3s:
+                for mp3 in mp3s:
+                    m = os.path.join("files", mp3)
+                    source = discord.FFmpegPCMAudio(m)
+                    voice_client.play(source)
+                    while voice_client.is_playing():
+                        await asyncio.sleep(1)
+
+        except Exception as e:
+            print(f"Error: {e}")
     else:
-        ctx.send("You are not in any voice channel.")
+        await ctx.send("You are not in any voice channel.")
+
+
 
 @bot.command(name="newp")
 async def new(ctx, playlist_name: str):

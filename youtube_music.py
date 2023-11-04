@@ -28,12 +28,14 @@ def get_song(name):
         return ""
 
 
-def download_mp3(link, name):
+async def download_mp3(link, name):
     try:
         yt = YouTube(link)
         stream = yt.streams.filter(only_audio=True).first()
         stream.download()
         os.rename(stream.default_filename, os.path.join("files", f"m{name}.mp3"))
+
+        return 1
     except Exception as e:
         print(f"Error while downloading MP3: {e}")
 
