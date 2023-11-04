@@ -33,7 +33,7 @@ def add_song_to_playlist(pn, su):
     with open(pn, "w") as f:
         f.write(f"{read}{su}\n")
 
-def preload(pn):
+async def preload(pn):
     pn = os.path.join("playlists/", pn)
     f = open(pn, "r")
     p = f.read().splitlines()
@@ -43,12 +43,11 @@ def preload(pn):
         sc += 1
         download_mp3(url, "id=" + str(sc))
     print(f"{pn} has been preloaded")
+    return 1
 
 def list_pl(pn):
     p = open(os.path.join("playlists/", pn), "r")
     pc = p.read().splitlines()
-    print("test:\n")
-    print(pc)
     names = []
     for url in pc:
         a = get_video_name(url)

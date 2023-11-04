@@ -71,9 +71,14 @@ async def show_pl(ctx, play_list_name: str):
 
 @bot.command(name="playpl")
 async def play(ctx, playlist_name: str):
-    music_manager.preload(playlist_name)
-    mp3s = os.listdir("files/")
+    voice_channel = ctx.author.voice.channel
+    if voice_channel:
+        voice_client = await voice_channel.connect()
 
+    await music_manager.preload(playlist_name)
+    mp3s = os.listdir("files/")
+    while not os.listdir("files/"):
+        await asyncio.sleep(1)
     for mp3 in mp3s:
         voice_client = ctx.voice_client
         m = os.path.join("files", mp3)
@@ -81,6 +86,9 @@ async def play(ctx, playlist_name: str):
         voice_client.play(source)
         while voice_client.is_playing():
             await asyncio.sleep(1)
+
+    else:
+        ctx.send("You are not in any voice channel.")
 
 @bot.command(name="newp")
 async def new(ctx, playlist_name: str):
